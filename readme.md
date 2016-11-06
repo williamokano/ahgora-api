@@ -1,6 +1,9 @@
 [![Build Status](https://travis-ci.org/williamokano/ahgora-api.svg?branch=master)](https://travis-ci.org/williamokano/ahgora-api)
 [![codecov](https://codecov.io/gh/williamokano/ahgora-api/branch/master/graph/badge.svg)](https://codecov.io/gh/williamokano/ahgora-api)
 [![StyleCI](https://styleci.io/repos/72966527/shield?branch=master)](https://styleci.io/repos/72966527)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/williamokano/ahgora-api/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/williamokano/ahgora-api/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/williamokano/ahgora-api/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/williamokano/ahgora-api/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/williamokano/ahgora-api/badges/build.png?b=master)](https://scrutinizer-ci.com/g/williamokano/ahgora-api/build-status/master)
 
 # Ahgora API
 Simple php api to communicate with the [Ahgora](https://www.ahgora.com.br/) system.
