@@ -76,6 +76,13 @@ interface IHttpClient
     public function getHeader($header);
 
     /**
+     * Get all headers from the http client.
+     *
+     * @return array
+     */
+    public function getHeaders();
+
+    /**
      * Set a timeout to the connection.
      *
      * @param int $timeout

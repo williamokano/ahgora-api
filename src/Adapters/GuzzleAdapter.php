@@ -137,6 +137,16 @@ class GuzzleAdapter implements IHttpClient
     }
 
     /**
+     * Get all headers from the http client.
+     *
+     * @return array
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
      * Set a timeout to the connection.
      *
      * @param int $timeout
