@@ -24,7 +24,7 @@ interface IHttpClient
      *
      * @return \Katapoka\Ahgora\HttpResponse
      */
-    public function request($method, $url, $data = array(), array $config = array());
+    public function request($method, $url, $data = [], array $config = []);
 
     /**
      * Make a get request to an URL.
@@ -35,7 +35,7 @@ interface IHttpClient
      *
      * @return \Katapoka\Ahgora\HttpResponse
      */
-    public function get($url, $data = array(), array $config = array());
+    public function get($url, $data = [], array $config = []);
 
     /**
      * Make a post request to an URL.
@@ -46,7 +46,7 @@ interface IHttpClient
      *
      * @return \Katapoka\Ahgora\HttpResponse
      */
-    public function post($url, $data = array(), array $config = array());
+    public function post($url, $data = [], array $config = []);
 
     /**
      * Set a header to the request.
