@@ -6,8 +6,6 @@ use PHPUnit_Framework_TestCase;
 
 /**
  * Class responsible for holding all the Api.php tests.
- *
- * @package Katapoka\Tests\Ahgora
  */
 class ApiTest extends PHPUnit_Framework_TestCase
 {
