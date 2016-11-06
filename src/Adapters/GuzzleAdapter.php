@@ -44,7 +44,7 @@ class GuzzleAdapter implements IHttpClient
      *
      * @return \Katapoka\Ahgora\HttpResponse
      */
-    public function request($method, $url, $data = array(), array $config = array())
+    public function request($method, $url, $data = [], array $config = [])
     {
         // @TODO: Still, please fix me!
         return new HttpResponse([
@@ -62,7 +62,7 @@ class GuzzleAdapter implements IHttpClient
      *
      * @return \Katapoka\Ahgora\HttpResponse
      */
-    public function get($url, $data = array(), array $config = array())
+    public function get($url, $data = [], array $config = [])
     {
         return $this->request(IHttpClient::HTTP_GET, $data, $config);
     }
@@ -76,7 +76,7 @@ class GuzzleAdapter implements IHttpClient
      *
      * @return \Katapoka\Ahgora\HttpResponse
      */
-    public function post($url, $data = array(), array $config = array())
+    public function post($url, $data = [], array $config = [])
     {
         return $this->request(IHttpClient::HTTP_POST, $data, $config);
     }
@@ -146,6 +146,7 @@ class GuzzleAdapter implements IHttpClient
     public function setTimeout($timeout)
     {
         $this->timeout = $timeout;
+
         return $this;
     }
 

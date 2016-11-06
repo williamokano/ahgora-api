@@ -13,7 +13,7 @@ class HttpResponse
     /** @var string The response body */
     public $body;
 
-    public function __construct(array $data = array())
+    public function __construct(array $data = [])
     {
         foreach ($data as $key => $value) {
             if (property_exists($this, $key)) {
