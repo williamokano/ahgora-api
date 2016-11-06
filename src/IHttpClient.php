@@ -8,6 +8,12 @@ namespace Katapoka\Ahgora;
  */
 interface IHttpClient
 {
+
+    const HTTP_GET = 'GET';
+    const HTTP_POST = 'POST';
+    const HTTP_PUT = 'PUT';
+    const HTTP_DELETE = 'DELETE';
+
     /**
      * Make an http request to some URL with the given http method
      *
@@ -53,20 +59,38 @@ interface IHttpClient
     public function setHeader($header, $value);
 
     /**
+     * Unset a header to the request.
+     *
+     * @param string $header
+     *
+     * @return \Katapoka\Ahgora\IHttpClient the instance of the class for method chaining
+     */
+    public function unsetHeader($header);
+
+    /**
      * Retrieves the value of a given header name.
      *
      * @param string $header
      *
-     * @return string
+     * @return string|null
      */
     public function getHeader($header);
 
     /**
      * Set a timeout to the connection.
      *
-     * @param int $ttl
+     * @param int $timeout
      *
      * @return \Katapoka\Ahgora\IHttpClient
      */
-    public function setTimeout($ttl);
+    public function setTimeout($timeout);
+
+    /**
+     * Set if the request will response a json instead of form data.
+     *
+     * @param bool $isJson
+     *
+     * @return \Katapoka\Ahgora\IHttpClient
+     */
+    public function setIsJson($isJson = true);
 }
