@@ -2,6 +2,7 @@ preset: psr2
 
 enabled:
   - extra_empty_lines
+  - short_array_syntax
   - no_empty_lines_after_phpdocs
   - phpdoc_align
   - phpdoc_indent
