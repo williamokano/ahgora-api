@@ -12,6 +12,7 @@
 [![Monthly Downloads](https://poser.pugx.org/williamokano/ahgora-api/d/monthly)](https://packagist.org/packages/williamokano/ahgora-api)
 [![Daily Downloads](https://poser.pugx.org/williamokano/ahgora-api/d/daily)](https://packagist.org/packages/williamokano/ahgora-api)
 [![composer.lock](https://poser.pugx.org/williamokano/ahgora-api/composerlock)](https://packagist.org/packages/williamokano/ahgora-api)
+[![Dependency Status](https://www.versioneye.com/user/projects/581fb4e2afb6141be330ad6d/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/581fb4e2afb6141be330ad6d)
 
 # Ahgora API
 Simple php api to communicate with the [Ahgora](https://www.ahgora.com.br/) system.
