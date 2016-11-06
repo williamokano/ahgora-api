@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/williamokano/ahgora-api.svg?branch=master)](https://travis-ci.org/williamokano/ahgora-api)
+[![codecov](https://codecov.io/gh/williamokano/ahgora-api/branch/master/graph/badge.svg)](https://codecov.io/gh/williamokano/ahgora-api)
+
+
 # Ahgora API
 Simple php api to communicate with the [Ahgora](https://www.ahgora.com.br/) system.
 
