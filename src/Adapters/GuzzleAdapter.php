@@ -64,7 +64,7 @@ class GuzzleAdapter implements IHttpClient
      */
     public function get($url, $data = [], array $config = [])
     {
-        return $this->request(IHttpClient::HTTP_GET, $data, $config);
+        return $this->request(IHttpClient::HTTP_GET, $url, $data, $config);
     }
 
     /**
@@ -78,7 +78,7 @@ class GuzzleAdapter implements IHttpClient
      */
     public function post($url, $data = [], array $config = [])
     {
-        return $this->request(IHttpClient::HTTP_POST, $data, $config);
+        return $this->request(IHttpClient::HTTP_POST, $url, $data, $config);
     }
 
     /**
