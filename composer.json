@@ -1,0 +1,26 @@
+{
+    "name": "williamokano/ahgora-api",
+    "description": "A simple PHP Api for the Ahgora system",
+    "type": "library",
+    "license": "BSD-3",
+    "authors": [
+        {
+            "name": "William Okano",
+            "email": "williamokano@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "guzzlehttp/guzzle": "^6.2",
+        "php": ">=5.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Katapoka\\Ahgora\\": "src/",
+            "Katapoka\\Tests\\Ahgora\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.6"
+    }
+}
