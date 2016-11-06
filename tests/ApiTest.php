@@ -13,7 +13,11 @@ class ApiTest extends PHPUnit_Framework_TestCase
 {
     public function testConstructor()
     {
-        $guzzleAdapter = new GuzzleAdapter();
+        $guzzleMock = \Mockery::mock('\GuzzleHttp\Client', [
+
+        ]);
+
+        $guzzleAdapter = new GuzzleAdapter($guzzleMock);
         $this->assertInstanceOf(IHttpClient::class, $guzzleAdapter);
 
         $api = new Api($guzzleAdapter);

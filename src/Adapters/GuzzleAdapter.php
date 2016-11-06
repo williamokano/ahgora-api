@@ -2,6 +2,7 @@
 
 namespace Katapoka\Ahgora\Adapters;
 
+use GuzzleHttp\Client;
 use Katapoka\Ahgora\IHttpClient;
 
 /**
@@ -9,6 +10,18 @@ use Katapoka\Ahgora\IHttpClient;
  */
 class GuzzleAdapter implements IHttpClient
 {
+    /** @var \GuzzleHttp\Client */
+    private $client;
+
+    /**
+     * GuzzleAdapter constructor.
+     *
+     * @param Client $client
+     */
+    public function __construct(Client $client)
+    {
+        $this->client = $client;
+    }
 
     /**
      * Make an http request to some URL with the given http method
