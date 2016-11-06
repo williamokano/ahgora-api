@@ -7,5 +7,11 @@ namespace Katapoka\Ahgora;
  */
 class Api
 {
+    /** @var \Katapoka\Ahgora\IHttpClient */
+    private $httpClient;
 
+    public function __construct(IHttpClient $httpClient)
+    {
+        $this->httpClient = $httpClient;
+    }
 }
