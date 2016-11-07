@@ -91,6 +91,7 @@ class Api
      */
     public function doLogin()
     {
+        $hasLoggedIn = false;
         $this->debug('Started login proccess');
         $response = $this->httpClient->get($this->companyUrl());
         $accessEnabled = stripos($response->body, 'Sua Empresa não liberou o acesso a essa ferramenta') === false;
@@ -105,30 +106,55 @@ class Api
                 'senha'     => $this->password,
             ]);
 
-            // How it works: If statusCode 200 and no body, login ok, otherwise, login failed.
-            // Should return a json with property "r" with "error" and "text" with the message
-            if ($response->httpStatus === IHttpClient::HTTP_STATUS_OK) {
-                $json = json_decode($response->body, true);
-                if (json_last_error() !== JSON_ERROR_NONE) {
-                    $this->debug('Failed to debug json', ['str' => $response->body]);
-                } else {
-                    $this->debug('response', $json);
-
-                    // LoggedIn successfully
-                    if ($json['r'] === 'success') {
-                        $this->setLoggedIn(true);
-
-                        return true;
-                    }
-                }
-            }
+            $hasLoggedIn = $this->checkLoginStatus($response);
         } else {
             $this->debug("Company hasn't external access enabled");
         }
 
-        $this->setLoggedIn(false);
+        $this->setLoggedIn($hasLoggedIn);
 
+        return $hasLoggedIn;
+    }
+
+    /**
+     * Check the return of the login action.
+     * How it works: If statusCode 200 and no body, login ok, otherwise, login failed.
+     * Should return a json with property "r" with "error" and "text" with the message
+     *
+     * @param HttpResponse $response
+     *
+     * @return bool
+     */
+    private function checkLoginStatus(HttpResponse $response)
+    {
+        if ($response->httpStatus === IHttpClient::HTTP_STATUS_OK) {
+            $json = $this->safeJsonDecode($response->body, true);
+                if ($json['r'] === 'success') {
+                    return true;
+                }
+        }
         return false;
+    }
+
+    /**
+     * Safely decodes a json.
+     *
+     * @param string $string
+     * @param bool $asArray
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return mixed
+     */
+    private function safeJsonDecode($string, $asArray = false)
+    {
+        $json = json_decode($string, $asArray);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->debug('Failed to debug json', ['str' => $string]);
+            throw new InvalidArgumentException('Failed to decode json');
+        } else {
+            return $json;
+        }
     }
 
     /**
