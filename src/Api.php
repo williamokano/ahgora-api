@@ -13,6 +13,7 @@ class Api
 
     const AHGORA_BASE_URL = 'https://www.ahgora.com.br';
     const AHGORA_COMPANY_URL = '%s/externo/index/%s';
+    const AHGORA_LOGIN_URL = '%s/externo/login';
 
     /** @var \Katapoka\Ahgora\IHttpClient */
     private $httpClient;
@@ -97,12 +98,35 @@ class Api
         // If the company haven't enabled external access, or maybe the company id isn't correct, don't even try to continue to the login process
         if ($accessEnabled) {
             $this->debug('Company has external access enabled');
-            $this->setLoggedIn(true);
 
-            return true;
+            $response = $this->httpClient->post($this->loginUrl(), [
+                'empresa'   => $this->companyId,
+                'matricula' => $this->username,
+                'senha'     => $this->password,
+            ]);
+
+            // How it works: If statusCode 200 and no body, login ok, otherwise, login failed.
+            // Should return a json with property "r" with "error" and "text" with the message
+            if ($response->httpStatus === IHttpClient::HTTP_STATUS_OK) {
+                $json = json_decode($response->body, true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    $this->debug('Failed to debug json', ['str' => $response->body]);
+                } else {
+                    $this->debug('response', $json);
+
+                    // LoggedIn successfully
+                    if ($json['r'] === 'success') {
+                        $this->setLoggedIn(true);
+
+                        return true;
+                    }
+                }
+            }
+        } else {
+            $this->debug("Company hasn't external access enabled");
         }
 
-        $this->debug("Company hasn't external access enabled");
+        $this->setLoggedIn(false);
 
         return false;
     }
@@ -138,5 +162,18 @@ class Api
         $this->debug('CompanyURL', ['company_url' => $companyUrl]);
 
         return $companyUrl;
+    }
+
+    /**
+     * Build the login url.
+     *
+     * @return string
+     */
+    private function loginUrl()
+    {
+        $loginUrl = sprintf(self::AHGORA_LOGIN_URL, self::AHGORA_BASE_URL);
+        $this->debug('loginUrl', ['login_url' => $loginUrl]);
+
+        return $loginUrl;
     }
 }

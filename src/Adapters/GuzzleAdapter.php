@@ -46,10 +46,11 @@ class GuzzleAdapter implements IHttpClient
      */
     public function request($method, $url, $data = [], array $config = [])
     {
-        $postData = $this->isJson ? json_encode($data) : http_build_query($data);
-
         $config = array_merge($config, [
-            'body' => $postData,
+            'form_params' => $data,
+            'headers'     => [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
         ]);
 
         $response = $this->client->request($method, $url, $config);

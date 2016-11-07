@@ -13,6 +13,8 @@ interface IHttpClient
     const HTTP_PUT = 'PUT';
     const HTTP_DELETE = 'DELETE';
 
+    const HTTP_STATUS_OK = 200;
+
     /**
      * Make an http request to some URL with the given http method
      *
