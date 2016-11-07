@@ -41,7 +41,7 @@ class LoggableTraitTest extends PHPUnit_Framework_TestCase
     public function testLog()
     {
         $logger = Mockery::mock(LoggerInterface::class, [
-            'log' => null
+            'log' => null,
         ]);
         $this->traitObject->setLogger($logger);
 
@@ -75,7 +75,7 @@ class LoggableTraitTest extends PHPUnit_Framework_TestCase
     public function testLogLevels()
     {
         $logger = Mockery::mock(LoggerInterface::class, [
-            'log' => null
+            'log' => null,
         ]);
         $this->traitObject->setLogger($logger);
 
@@ -96,7 +96,7 @@ class LoggableTraitTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    private function invokeMethod(&$object, $methodName, array $parameters = array())
+    private function invokeMethod(&$object, $methodName, array $parameters = [])
     {
         $reflection = new ReflectionClass(get_class($object));
         $method = $reflection->getMethod($methodName);
