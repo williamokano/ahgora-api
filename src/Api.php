@@ -93,27 +93,45 @@ class Api
     {
         $hasLoggedIn = false;
         $this->debug('Started login proccess');
-        $response = $this->httpClient->get($this->companyUrl());
-        $accessEnabled = stripos($response->body, 'Sua Empresa não liberou o acesso a essa ferramenta') === false;
 
-        // If the company haven't enabled external access, or maybe the company id isn't correct, don't even try to continue to the login process
+
+        $accessEnabled = $this->checkAccessEnabled();
+
         if ($accessEnabled) {
-            $this->debug('Company has external access enabled');
-
-            $response = $this->httpClient->post($this->loginUrl(), [
-                'empresa'   => $this->companyId,
-                'matricula' => $this->username,
-                'senha'     => $this->password,
-            ]);
-
+            $response = $this->executeLogin();
             $hasLoggedIn = $this->checkLoginStatus($response);
-        } else {
-            $this->debug("Company hasn't external access enabled");
         }
+
+        $this->debug($accessEnabled ? "Company has external access enabled" : "Company hasn't external access enabled");
 
         $this->setLoggedIn($hasLoggedIn);
 
         return $hasLoggedIn;
+    }
+
+    /**
+     * Execute the login on the server and returns the server response.
+     *
+     * @return HttpResponse
+     */
+    private function executeLogin()
+    {
+        return $this->httpClient->post($this->loginUrl(), [
+            'empresa'   => $this->companyId,
+            'matricula' => $this->username,
+            'senha'     => $this->password,
+        ]);
+    }
+
+    /**
+     * Check if the company has external access on the Ahgora system.
+     *
+     * @return bool
+     */
+    private function checkAccessEnabled()
+    {
+        $response = $this->httpClient->get($this->companyUrl());
+        return stripos($response->body, 'Sua Empresa não liberou o acesso a essa ferramenta') === false;
     }
 
     /**
