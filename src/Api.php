@@ -9,7 +9,10 @@ use InvalidArgumentException;
  */
 class Api
 {
-    const AHGORA_BASE_URL = 'https://www.ahgora.com.br/';
+    use Loggable;
+
+    const AHGORA_BASE_URL = 'https://www.ahgora.com.br';
+    const AHGORA_COMPANY_URL = '%s/externo/index/%s';
 
     /** @var \Katapoka\Ahgora\IHttpClient */
     private $httpClient;
@@ -30,6 +33,7 @@ class Api
     public function __construct(IHttpClient $httpClient)
     {
         $this->httpClient = $httpClient;
+        $this->debug('Api instance created');
     }
 
     /**
@@ -42,6 +46,7 @@ class Api
     public function setCompanyId($companyId)
     {
         $this->companyId = $companyId;
+        $this->debug('Company ID set', ['company_id' => $companyId]);
 
         return $this;
     }
@@ -56,6 +61,7 @@ class Api
     public function setUsername($username)
     {
         $this->username = $username;
+        $this->debug('Username set', ['username' => $username]);
 
         return $this;
     }
@@ -70,6 +76,7 @@ class Api
     public function setPassword($password)
     {
         $this->password = $password;
+        $this->debug('Password set', ['password' => $password]);
 
         return $this;
     }
@@ -83,9 +90,20 @@ class Api
      */
     public function doLogin()
     {
-        $this->setLoggedIn(true);
+        $this->debug('Started login proccess');
+        $response = $this->httpClient->get($this->companyUrl());
+        $accessEnabled = stripos($response->body, 'Sua Empresa não liberou o acesso a essa ferramenta') === false;
 
-        return true;
+        // If the company haven't enabled external access, or maybe the company id isn't correct, don't even try to continue to the login process
+        if ($accessEnabled) {
+            $this->debug('Company has external access enabled');
+            $this->setLoggedIn(true);
+
+            return true;
+        }
+
+        $this->debug("Company hasn't external access enabled");
+        return false;
     }
 
     /**
@@ -101,8 +119,22 @@ class Api
         if (!is_bool($loggedIn)) {
             throw new InvalidArgumentException('LoggedIn parameter must be boolean');
         }
+
+        $this->debug('setLoggedIn', ['logged_in' => $loggedIn]);
         $this->loggedIn = $loggedIn;
 
         return $this;
+    }
+
+    /**
+     * Build the company url string.
+     *
+     * @return string
+     */
+    private function companyUrl()
+    {
+        $companyUrl = sprintf(self::AHGORA_COMPANY_URL, self::AHGORA_BASE_URL, $this->companyId);
+        $this->debug('CompanyURL', ['company_url' => $companyUrl]);
+        return $companyUrl;
     }
 }

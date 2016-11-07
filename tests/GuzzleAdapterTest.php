@@ -5,6 +5,7 @@ namespace Katapoka\Tests\Ahgora;
 use Katapoka\Ahgora\Adapters\GuzzleAdapter;
 use Katapoka\Ahgora\HttpResponse;
 use Katapoka\Ahgora\IHttpClient;
+use Mockery;
 use PHPUnit_Framework_TestCase;
 use Exception;
 use InvalidArgumentException;
@@ -16,7 +17,7 @@ class GuzzleAdapterTest extends PHPUnit_Framework_TestCase
 {
     public function testContructor()
     {
-        $guzzleMock = \Mockery::mock('\GuzzleHttp\Client', []);
+        $guzzleMock = Mockery::mock('\GuzzleHttp\Client', []);
 
         $guzzleAdapter = new GuzzleAdapter($guzzleMock);
         $this->assertInstanceOf(GuzzleAdapter::class, $guzzleAdapter);
@@ -24,7 +25,13 @@ class GuzzleAdapterTest extends PHPUnit_Framework_TestCase
 
     public function testRequest()
     {
-        $guzzleMock = \Mockery::mock('\GuzzleHttp\Client', []);
+        $guzzleMock = Mockery::mock('\GuzzleHttp\Client', [
+            'request' => Mockery::mock('\Psr\Http\Message\ResponseInterface', [
+                'getStatusCode' => 200,
+                'getBody'       => 'asdadasd',
+                'getHeaders'    => [],
+            ]),
+        ]);
 
         $guzzleAdapter = new GuzzleAdapter($guzzleMock);
         $this->assertInstanceOf(GuzzleAdapter::class, $guzzleAdapter);
@@ -39,7 +46,13 @@ class GuzzleAdapterTest extends PHPUnit_Framework_TestCase
 
     public function testGet()
     {
-        $guzzleMock = \Mockery::mock('\GuzzleHttp\Client', []);
+        $guzzleMock = Mockery::mock('\GuzzleHttp\Client', [
+            'request' => Mockery::mock('\Psr\Http\Message\ResponseInterface', [
+                'getStatusCode' => 200,
+                'getBody'       => 'asdadasd',
+                'getHeaders'    => [],
+            ]),
+        ]);
 
         $guzzleAdapter = new GuzzleAdapter($guzzleMock);
         $this->assertInstanceOf(GuzzleAdapter::class, $guzzleAdapter);
@@ -54,7 +67,13 @@ class GuzzleAdapterTest extends PHPUnit_Framework_TestCase
 
     public function testPost()
     {
-        $guzzleMock = \Mockery::mock('\GuzzleHttp\Client', []);
+        $guzzleMock = Mockery::mock('\GuzzleHttp\Client', [
+            'request' => Mockery::mock('\Psr\Http\Message\ResponseInterface', [
+                'getStatusCode' => 200,
+                'getBody'       => 'asdadasd',
+                'getHeaders'    => [],
+            ]),
+        ]);
 
         $guzzleAdapter = new GuzzleAdapter($guzzleMock);
         $this->assertInstanceOf(GuzzleAdapter::class, $guzzleAdapter);
@@ -69,7 +88,7 @@ class GuzzleAdapterTest extends PHPUnit_Framework_TestCase
 
     public function testSetHeader()
     {
-        $guzzleMock = \Mockery::mock('\GuzzleHttp\Client', []);
+        $guzzleMock = Mockery::mock('\GuzzleHttp\Client', []);
 
         $guzzleAdapter = new GuzzleAdapter($guzzleMock);
         $this->assertInstanceOf(GuzzleAdapter::class, $guzzleAdapter);
@@ -111,7 +130,7 @@ class GuzzleAdapterTest extends PHPUnit_Framework_TestCase
 
     public function testUnsetHeader()
     {
-        $guzzleMock = \Mockery::mock('\GuzzleHttp\Client', []);
+        $guzzleMock = Mockery::mock('\GuzzleHttp\Client', []);
 
         $guzzleAdapter = new GuzzleAdapter($guzzleMock);
         $this->assertInstanceOf(GuzzleAdapter::class, $guzzleAdapter);
@@ -142,14 +161,14 @@ class GuzzleAdapterTest extends PHPUnit_Framework_TestCase
 
     public function testGetHeader()
     {
-        $guzzleMock = \Mockery::mock('\GuzzleHttp\Client', []);
+        $guzzleMock = Mockery::mock('\GuzzleHttp\Client', []);
 
         $guzzleAdapter = new GuzzleAdapter($guzzleMock);
         $this->assertInstanceOf(GuzzleAdapter::class, $guzzleAdapter);
 
         $headers = [
             'fakeheader' => 'I am so fake, but I am fabulous!',
-            'doge' => 'I am so fake, but I am fabulous!',
+            'doge'       => 'I am so fake, but I am fabulous!',
         ];
 
         foreach ($headers as $header => $value) {
@@ -167,7 +186,7 @@ class GuzzleAdapterTest extends PHPUnit_Framework_TestCase
 
     public function testGetHeaders()
     {
-        $guzzleMock = \Mockery::mock('\GuzzleHttp\Client', []);
+        $guzzleMock = Mockery::mock('\GuzzleHttp\Client', []);
 
         $guzzleAdapter = new GuzzleAdapter($guzzleMock);
         $this->assertInstanceOf(GuzzleAdapter::class, $guzzleAdapter);
@@ -178,7 +197,7 @@ class GuzzleAdapterTest extends PHPUnit_Framework_TestCase
 
         $headers = [
             'fakeheader' => 'I am so fake, but I am fabulous!',
-            'doge' => 'I am so fake, but I am fabulous!',
+            'doge'       => 'I am so fake, but I am fabulous!',
         ];
 
         foreach ($headers as $header => $value) {
@@ -192,7 +211,7 @@ class GuzzleAdapterTest extends PHPUnit_Framework_TestCase
 
     public function testSetTimeout()
     {
-        $guzzleMock = \Mockery::mock('\GuzzleHttp\Client', []);
+        $guzzleMock = Mockery::mock('\GuzzleHttp\Client', []);
 
         $guzzleAdapter = new GuzzleAdapter($guzzleMock);
         $this->assertInstanceOf(GuzzleAdapter::class, $guzzleAdapter);
@@ -206,7 +225,7 @@ class GuzzleAdapterTest extends PHPUnit_Framework_TestCase
 
     public function testSetIsJson()
     {
-        $guzzleMock = \Mockery::mock('\GuzzleHttp\Client', []);
+        $guzzleMock = Mockery::mock('\GuzzleHttp\Client', []);
 
         $guzzleAdapter = new GuzzleAdapter($guzzleMock);
         $this->assertInstanceOf(GuzzleAdapter::class, $guzzleAdapter);

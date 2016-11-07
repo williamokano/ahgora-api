@@ -46,11 +46,21 @@ class GuzzleAdapter implements IHttpClient
      */
     public function request($method, $url, $data = [], array $config = [])
     {
-        // @TODO: Still, please fix me!
-        return new HttpResponse([
-            'httpStatus' => 200,
-            'body' => json_encode(['message' => 'hello world']),
+        $postData = $this->isJson ? json_encode($data) : http_build_query($data);
+
+        $config = array_merge($config, [
+            'body' => $postData,
         ]);
+
+        $response = $this->client->request($method, $url, $config);
+
+        $httpResponse = new HttpResponse([
+            'httpStatus' => $response->getStatusCode(),
+            'body'       => $response->getBody(),
+            'headers'    => $response->getHeaders(),
+        ]);
+
+        return $httpResponse;
     }
 
     /**

@@ -13,6 +13,9 @@ class HttpResponse
     /** @var string The response body */
     public $body;
 
+    /** @var array The response headers */
+    public $headers = [];
+
     public function __construct(array $data = [])
     {
         foreach ($data as $key => $value) {
