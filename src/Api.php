@@ -127,12 +127,17 @@ class Api
      */
     private function checkLoginStatus(HttpResponse $response)
     {
-        if ($response->httpStatus === IHttpClient::HTTP_STATUS_OK) {
-            $json = $this->safeJsonDecode($response->body, true);
+        try {
+            if ($response->httpStatus === IHttpClient::HTTP_STATUS_OK) {
+                $json = $this->safeJsonDecode($response->body, true);
                 if ($json['r'] === 'success') {
                     return true;
                 }
+            }
+        } catch (InvalidArgumentException $iaex) {
+            $this->error($iaex->getMessage(), ['expcetion' => $iaex]);
         }
+
         return false;
     }
 
@@ -140,7 +145,7 @@ class Api
      * Safely decodes a json.
      *
      * @param string $string
-     * @param bool $asArray
+     * @param bool   $asArray
      *
      * @throws InvalidArgumentException
      *
