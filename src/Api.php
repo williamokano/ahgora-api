@@ -131,6 +131,7 @@ class Api
     private function checkAccessEnabled()
     {
         $response = $this->httpClient->get($this->companyUrl());
+
         return stripos($response->body, 'Sua Empresa não liberou o acesso a essa ferramenta') === false;
     }
 
