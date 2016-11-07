@@ -72,5 +72,4 @@ trait Loggable
     {
         return $this->log(LogLevel::DEBUG, $message, $context);
     }
-
 }

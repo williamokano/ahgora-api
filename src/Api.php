@@ -103,6 +103,7 @@ class Api
         }
 
         $this->debug("Company hasn't external access enabled");
+
         return false;
     }
 
@@ -135,6 +136,7 @@ class Api
     {
         $companyUrl = sprintf(self::AHGORA_COMPANY_URL, self::AHGORA_BASE_URL, $this->companyId);
         $this->debug('CompanyURL', ['company_url' => $companyUrl]);
+
         return $companyUrl;
     }
 }
