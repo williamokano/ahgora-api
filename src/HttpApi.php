@@ -150,14 +150,12 @@ class HttpApi implements IAhgoraApi
     private function checkLoginStatus(IHttpResponse $response)
     {
         try {
-            if ($response->getHttpStatus() === IHttpClient::HTTP_STATUS_OK) {
-                return $this->getResponseLoginStatus($response);
-            }
+            return $response->getHttpStatus() === IHttpClient::HTTP_STATUS_OK && $this->getResponseLoginStatus($response);
         } catch (InvalidArgumentException $iaex) {
-            $this->error($iaex->getMessage(), ['expcetion' => $iaex]);
-        }
+            $this->error('checkLoginStatus', ['expcetion' => $iaex]);
 
-        return false;
+            return false;
+        }
     }
 
     private function getResponseLoginStatus(IHttpResponse $response)
