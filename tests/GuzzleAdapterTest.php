@@ -3,12 +3,12 @@
 namespace Katapoka\Tests\Ahgora;
 
 use Katapoka\Ahgora\Adapters\GuzzleAdapter;
-use Katapoka\Ahgora\HttpResponse;
-use Katapoka\Ahgora\IHttpClient;
-use Mockery;
-use PHPUnit_Framework_TestCase;
+use Katapoka\Ahgora\Contracts\IHttpClient;
+use Katapoka\Ahgora\Contracts\IHttpResponse;
 use Exception;
 use InvalidArgumentException;
+use Mockery;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Class GuzzleAdapterTest
@@ -37,11 +37,11 @@ class GuzzleAdapterTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(GuzzleAdapter::class, $guzzleAdapter);
 
         $response = $guzzleAdapter->request('POST', 'http://blabla');
-        $this->assertInstanceOf(HttpResponse::class, $response);
+        $this->assertInstanceOf(IHttpResponse::class, $response);
         $this->assertObjectHasAttribute('httpStatus', $response);
         $this->assertObjectHasAttribute('body', $response);
-        $this->assertEquals(200, $response->httpStatus);
-        $this->assertTrue(is_string($response->body));
+        $this->assertEquals(200, $response->getHttpStatus());
+        $this->assertTrue(is_string($response->getBody()));
     }
 
     public function testGet()
@@ -58,11 +58,11 @@ class GuzzleAdapterTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(GuzzleAdapter::class, $guzzleAdapter);
 
         $response = $guzzleAdapter->get('http://blabla');
-        $this->assertInstanceOf(HttpResponse::class, $response);
+        $this->assertInstanceOf(IHttpResponse::class, $response);
         $this->assertObjectHasAttribute('httpStatus', $response);
         $this->assertObjectHasAttribute('body', $response);
-        $this->assertEquals(200, $response->httpStatus);
-        $this->assertTrue(is_string($response->body));
+        $this->assertEquals(200, $response->getHttpStatus());
+        $this->assertTrue(is_string($response->getBody()));
     }
 
     public function testPost()
@@ -79,11 +79,11 @@ class GuzzleAdapterTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(GuzzleAdapter::class, $guzzleAdapter);
 
         $response = $guzzleAdapter->post('http://blabla');
-        $this->assertInstanceOf(HttpResponse::class, $response);
+        $this->assertInstanceOf(IHttpResponse::class, $response);
         $this->assertObjectHasAttribute('httpStatus', $response);
         $this->assertObjectHasAttribute('body', $response);
-        $this->assertEquals(200, $response->httpStatus);
-        $this->assertTrue(is_string($response->body));
+        $this->assertEquals(200, $response->getHttpStatus());
+        $this->assertTrue(is_string($response->getBody()));
     }
 
     public function testSetHeader()

@@ -5,7 +5,7 @@ namespace Katapoka\Ahgora\Adapters;
 use Doctrine\Instantiator\Exception\InvalidArgumentException;
 use GuzzleHttp\Client;
 use Katapoka\Ahgora\HttpResponse;
-use Katapoka\Ahgora\IHttpClient;
+use Katapoka\Ahgora\Contracts\IHttpClient;
 
 /**
  * Guzzle IHttpClient version
@@ -42,7 +42,7 @@ class GuzzleAdapter implements IHttpClient
      * @param array  $data
      * @param array  $config
      *
-     * @return \Katapoka\Ahgora\HttpResponse
+     * @return \Katapoka\Ahgora\Contracts\IHttpResponse
      */
     public function request($method, $url, $data = [], array $config = [])
     {
@@ -71,7 +71,7 @@ class GuzzleAdapter implements IHttpClient
      * @param array  $data
      * @param array  $config
      *
-     * @return \Katapoka\Ahgora\HttpResponse
+     * @return \Katapoka\Ahgora\Contracts\IHttpResponse
      */
     public function get($url, $data = [], array $config = [])
     {
@@ -85,7 +85,7 @@ class GuzzleAdapter implements IHttpClient
      * @param array  $data
      * @param array  $config
      *
-     * @return \Katapoka\Ahgora\HttpResponse
+     * @return \Katapoka\Ahgora\Contracts\IHttpResponse
      */
     public function post($url, $data = [], array $config = [])
     {
@@ -98,7 +98,7 @@ class GuzzleAdapter implements IHttpClient
      * @param string $header
      * @param string $value
      *
-     * @return \Katapoka\Ahgora\IHttpClient the instance of the class for method chaining
+     * @return \Katapoka\Ahgora\Contracts\IHttpClient the instance of the class for method chaining
      */
     public function setHeader($header, $value)
     {
@@ -120,7 +120,7 @@ class GuzzleAdapter implements IHttpClient
      *
      * @param string $header
      *
-     * @return \Katapoka\Ahgora\IHttpClient the instance of the class for method chaining
+     * @return \Katapoka\Ahgora\Contracts\IHttpClient the instance of the class for method chaining
      */
     public function unsetHeader($header)
     {
@@ -162,7 +162,7 @@ class GuzzleAdapter implements IHttpClient
      *
      * @param int $timeout
      *
-     * @return \Katapoka\Ahgora\IHttpClient
+     * @return \Katapoka\Ahgora\Contracts\IHttpClient
      */
     public function setTimeout($timeout)
     {
@@ -176,7 +176,7 @@ class GuzzleAdapter implements IHttpClient
      *
      * @param bool $isJson
      *
-     * @return \Katapoka\Ahgora\IHttpClient
+     * @return \Katapoka\Ahgora\Contracts\IHttpClient
      */
     public function setIsJson($isJson = true)
     {

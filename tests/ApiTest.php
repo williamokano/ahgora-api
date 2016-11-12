@@ -2,12 +2,12 @@
 namespace Katapoka\Tests\Ahgora;
 
 use Katapoka\Ahgora\Adapters\GuzzleAdapter;
-use Katapoka\Ahgora\Api;
-use Katapoka\Ahgora\IHttpClient;
+use Katapoka\Ahgora\HttpApi;
+use Katapoka\Ahgora\Contracts\IHttpClient;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Class responsible for holding all the Api.php tests.
+ * Class responsible for holding all the HttpApi.php tests.
  */
 class ApiTest extends PHPUnit_Framework_TestCase
 {
@@ -20,7 +20,7 @@ class ApiTest extends PHPUnit_Framework_TestCase
         $guzzleAdapter = new GuzzleAdapter($guzzleMock);
         $this->assertInstanceOf(IHttpClient::class, $guzzleAdapter);
 
-        $api = new Api($guzzleAdapter);
-        $this->assertInstanceOf(Api::class, $api);
+        $api = new HttpApi($guzzleAdapter);
+        $this->assertInstanceOf(HttpApi::class, $api);
     }
 }

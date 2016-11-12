@@ -3,11 +3,14 @@
 namespace Katapoka\Ahgora;
 
 use InvalidArgumentException;
+use Katapoka\Ahgora\Contracts\IAhgoraApi;
+use Katapoka\Ahgora\Contracts\IHttpClient;
+use Katapoka\Ahgora\Contracts\IHttpResponse;
 
 /**
  * Class responsible for getting the data from the Ahgora system.
  */
-class Api
+class HttpApi implements IAhgoraApi
 {
     use Loggable;
 
@@ -15,7 +18,7 @@ class Api
     const AHGORA_COMPANY_URL = '%s/externo/index/%s';
     const AHGORA_LOGIN_URL = '%s/externo/login';
 
-    /** @var \Katapoka\Ahgora\IHttpClient */
+    /** @var \Katapoka\Ahgora\Contracts\IHttpClient */
     private $httpClient;
     /** @var string */
     private $password;
@@ -112,7 +115,7 @@ class Api
     /**
      * Execute the login on the server and returns the server response.
      *
-     * @return HttpResponse
+     * @return IHttpResponse
      */
     private function executeLogin()
     {
@@ -132,7 +135,7 @@ class Api
     {
         $response = $this->httpClient->get($this->companyUrl());
 
-        return stripos($response->body, 'Sua Empresa não liberou o acesso a essa ferramenta') === false;
+        return stripos($response->getBody(), 'Sua Empresa não liberou o acesso a essa ferramenta') === false;
     }
 
     /**
@@ -140,15 +143,15 @@ class Api
      * How it works: If statusCode 200 and no body, login ok, otherwise, login failed.
      * Should return a json with property "r" with "error" and "text" with the message
      *
-     * @param HttpResponse $response
+     * @param IHttpResponse $response
      *
      * @return bool
      */
-    private function checkLoginStatus(HttpResponse $response)
+    private function checkLoginStatus(IHttpResponse $response)
     {
         try {
-            if ($response->httpStatus === IHttpClient::HTTP_STATUS_OK) {
-                $json = $this->safeJsonDecode($response->body, true);
+            if ($response->getHttpStatus() === IHttpClient::HTTP_STATUS_OK) {
+                $json = $this->safeJsonDecode($response->getBody(), true);
                 if ($json['r'] === 'success') {
                     return true;
                 }
@@ -225,5 +228,38 @@ class Api
         $this->debug('loginUrl', ['login_url' => $loginUrl]);
 
         return $loginUrl;
+    }
+
+    /**
+     * Get the punchs at the given parameters.
+     *
+     * @param int|null $month The month you want to get the punchs - Must be between 01 and 12 (both included)
+     * @param int|null $year  The year you want to get the punchs
+     *
+     * @return array
+     */
+    public function getPunchs($month = null, $year = null)
+    {
+        return [];
+    }
+
+    /**
+     * Gets the employer name.
+     *
+     * @return string
+     */
+    public function getEmployeeRole()
+    {
+        return "NOT IMPLEMENTED YET";
+    }
+
+    /**
+     * Get the employer department.
+     *
+     * @return string
+     */
+    public function getDepartment()
+    {
+        return "NOT IMPLEMENTED YET";
     }
 }
