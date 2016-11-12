@@ -151,8 +151,8 @@ class HttpApi implements IAhgoraApi
     {
         try {
             if ($response->getHttpStatus() === IHttpClient::HTTP_STATUS_OK) {
-                $json = $this->safeJsonDecode($response->getBody(), true);
-                if ($json['r'] === 'success') {
+                $json = $response->json();
+                if (array_key_exists('r', $json) && $json->r === 'success') {
                     return true;
                 }
             }
@@ -161,27 +161,6 @@ class HttpApi implements IAhgoraApi
         }
 
         return false;
-    }
-
-    /**
-     * Safely decodes a json.
-     *
-     * @param string $string
-     * @param bool   $asArray
-     *
-     * @throws InvalidArgumentException
-     *
-     * @return mixed
-     */
-    private function safeJsonDecode($string, $asArray = false)
-    {
-        $json = json_decode($string, $asArray);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->debug('Failed to debug json', ['str' => $string]);
-            throw new InvalidArgumentException('Failed to decode json');
-        } else {
-            return $json;
-        }
     }
 
     /**
