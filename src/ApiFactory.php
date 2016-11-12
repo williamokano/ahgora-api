@@ -12,9 +12,9 @@ class ApiFactory
      * @param IHttpClient $httpCLient
      * @param string      $type
      *
-     * @return \Katapoka\Ahgora\Contracts\IAhgoraApi
-     *
      * @throws InvalidArgumentException
+     *
+     * @return \Katapoka\Ahgora\Contracts\IAhgoraApi
      */
     public function create(IHttpClient $httpCLient, $type)
     {
