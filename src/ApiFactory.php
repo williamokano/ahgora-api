@@ -25,4 +25,5 @@ class ApiFactory
 
         throw new InvalidArgumentException("Api type `{$type}` not found.");
     }
+
 }
