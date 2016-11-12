@@ -16,9 +16,9 @@ class ApiFactory
      *
      * @return \Katapoka\Ahgora\Contracts\IAhgoraApi
      */
-    public function create(IHttpClient $httpCLient, $type)
+    public static function create(IHttpClient $httpCLient, $type)
     {
-        $className = sprintf('%sApi', $type);
+        $className = sprintf('%s\\%sApi', __NAMESPACE__, $type);
         if (class_exists($className)) {
             return new $className($httpCLient);
         }
