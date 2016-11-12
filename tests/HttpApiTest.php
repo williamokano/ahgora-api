@@ -9,7 +9,7 @@ use PHPUnit_Framework_TestCase;
 /**
  * Class responsible for holding all the HttpApi.php tests.
  */
-class ApiTest extends PHPUnit_Framework_TestCase
+class HttpApiTest extends PHPUnit_Framework_TestCase
 {
     public function testConstructor()
     {
