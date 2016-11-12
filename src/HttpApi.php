@@ -151,16 +151,26 @@ class HttpApi implements IAhgoraApi
     {
         try {
             if ($response->getHttpStatus() === IHttpClient::HTTP_STATUS_OK) {
-                $json = $response->json();
-                if (array_key_exists('r', $json) && $json->r === 'success') {
-                    return true;
-                }
+                return $this->getResponseLoginStatus($response);
             }
         } catch (InvalidArgumentException $iaex) {
             $this->error($iaex->getMessage(), ['expcetion' => $iaex]);
         }
 
         return false;
+    }
+
+    private function getResponseLoginStatus(IHttpResponse $response)
+    {
+        try {
+            $json = $response->json();
+
+            return array_key_exists('r', $json) && $json->r === 'success';
+        } catch (InvalidArgumentException $iaex) {
+            $this->debug('getResponseLoginStatus', ['exception', $iaex]);
+
+            return false;
+        }
     }
 
     /**
