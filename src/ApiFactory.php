@@ -14,7 +14,7 @@ class ApiFactory
      *
      * @throws InvalidArgumentException
      *
-     * @return \Katapoka\Ahgora\Contracts\IAhgoraApi
+     * @return \Katapoka\Ahgora\AbstractApi
      */
     public static function create(IHttpClient $httpCLient, $type)
     {

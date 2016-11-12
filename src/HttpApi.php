@@ -3,17 +3,14 @@
 namespace Katapoka\Ahgora;
 
 use InvalidArgumentException;
-use Katapoka\Ahgora\Contracts\IAhgoraApi;
 use Katapoka\Ahgora\Contracts\IHttpClient;
 use Katapoka\Ahgora\Contracts\IHttpResponse;
 
 /**
  * Class responsible for getting the data from the Ahgora system.
  */
-class HttpApi implements IAhgoraApi
+class HttpApi extends AbstractApi
 {
-    use Loggable;
-
     const AHGORA_BASE_URL = 'https://www.ahgora.com.br';
     const AHGORA_COMPANY_URL = '%s/externo/index/%s';
     const AHGORA_LOGIN_URL = '%s/externo/login';
