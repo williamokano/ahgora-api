@@ -158,6 +158,13 @@ class HttpApi implements IAhgoraApi
         }
     }
 
+    /**
+     * Check if the response can be decoded as json, has the property r and r is 'success'.
+     *
+     * @param IHttpResponse $response
+     *
+     * @return bool
+     */
     private function getResponseLoginStatus(IHttpResponse $response)
     {
         try {
