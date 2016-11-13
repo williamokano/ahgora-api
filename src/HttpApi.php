@@ -6,6 +6,7 @@ use DateTime;
 use InvalidArgumentException;
 use Katapoka\Ahgora\Contracts\IHttpClient;
 use Katapoka\Ahgora\Contracts\IHttpResponse;
+use LogicException;
 
 /**
  * Class responsible for getting the data from the Ahgora system.
@@ -123,6 +124,10 @@ class HttpApi extends AbstractApi
      */
     public function getPunches($month = null, $year = null)
     {
+        if (!$this->loggedIn) {
+            throw new LogicException('To get punches you need to be loggedIn');
+        }
+
         $month = $month !== null ? $month : (int) date('m');
         $year = $year !== null ? $year : (int) date('Y');
 
