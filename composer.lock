@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ed039e26f1a569697bf87d9938700557",
-    "content-hash": "5cc5037ba776f79fc1066b589786bf0a",
+    "hash": "e17c63a3826319e6dfb876307ec34a70",
+    "content-hash": "6a60cd7f83328a1f99b8419c782d35f5",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -277,16 +277,16 @@
         },
         {
             "name": "williamokano/ahgora-api-contracts",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/williamokano/ahgora-api-contracts.git",
-                "reference": "1c82ea6dbaa7d95f96522a7eddf574edcd663f6a"
+                "reference": "fbbf415c897fc4273e087e72669aa31af89b2fdf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/williamokano/ahgora-api-contracts/zipball/1c82ea6dbaa7d95f96522a7eddf574edcd663f6a",
-                "reference": "1c82ea6dbaa7d95f96522a7eddf574edcd663f6a",
+                "url": "https://api.github.com/repos/williamokano/ahgora-api-contracts/zipball/fbbf415c897fc4273e087e72669aa31af89b2fdf",
+                "reference": "fbbf415c897fc4273e087e72669aa31af89b2fdf",
                 "shasum": ""
             },
             "require": {
@@ -309,7 +309,7 @@
                 }
             ],
             "description": "Ahgora API contracts",
-            "time": "2016-11-12 02:14:35"
+            "time": "2016-11-13 06:49:37"
         }
     ],
     "packages-dev": [

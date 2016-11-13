@@ -9,32 +9,32 @@ use Katapoka\Ahgora\Contracts\IHttpResponse;
 class HtmlPageParser
 {
     /**
-     * @param \Katapoka\Ahgora\Contracts\IHttpResponse $punchsPageResponse
+     * @param \Katapoka\Ahgora\Contracts\IHttpResponse $punchesPageResponse
      *
      * @return mixed
      */
-    public function getPunchsTableHtml(IHttpResponse $punchsPageResponse)
+    public function getPunchesTableHtml(IHttpResponse $punchesPageResponse)
     {
-        $tables = $this->getPageTables($punchsPageResponse);
+        $tables = $this->getPageTables($punchesPageResponse);
 
         //The first table is the data summary
-        return $tables['punchs'];
+        return $tables['punches'];
     }
 
     /**
      * Get the punch's rows in array format.
      *
-     * @param IHttpResponse $punchsPageResponse
+     * @param IHttpResponse $punchesPageResponse
      *
      * @return array
      */
-    public function getPunchsRows(IHttpResponse $punchsPageResponse)
+    public function getPunchesRows(IHttpResponse $punchesPageResponse)
     {
-        $punchsTableHtml = $this->getPunchsTableHtml($punchsPageResponse);
+        $punchesTableHtml = $this->getPunchesTableHtml($punchesPageResponse);
 
         $dom = new DOMDocument();
-        if (!@$dom->loadHTML($punchsTableHtml)) {
-            throw new InvalidArgumentException('Failed to parse punchsTable');
+        if (!@$dom->loadHTML($punchesTableHtml)) {
+            throw new InvalidArgumentException('Failed to parse punchesTable');
         }
 
         $rows = $dom->getElementsByTagName('tr');
@@ -65,28 +65,28 @@ class HtmlPageParser
 
         return [
             'date'   => trim($cols->item(0)->nodeValue),
-            'punchs' => trim($cols->item(2)->nodeValue),
+            'punches' => trim($cols->item(2)->nodeValue),
         ];
     }
 
     /**
-     * Get both tables and return the strings into an array with the properties 'summary' and 'punchs'.
+     * Get both tables and return the strings into an array with the properties 'summary' and 'punches'.
      *
-     * @param IHttpResponse $punchsPageResponse
+     * @param IHttpResponse $punchesPageResponse
      *
      * @return array
      */
-    private function getPageTables(IHttpResponse $punchsPageResponse)
+    private function getPageTables(IHttpResponse $punchesPageResponse)
     {
         $regex = '/<table.*?>.*?<\/table>/si';
 
-        if (!preg_match_all($regex, $punchsPageResponse->getBody(), $matches)) {
+        if (!preg_match_all($regex, $punchesPageResponse->getBody(), $matches)) {
             throw new InvalidArgumentException('Pattern not found in the response');
         }
 
         return [
             'summary' => $matches[0][0],
-            'punchs'  => $matches[0][1],
+            'punches'  => $matches[0][1],
         ];
     }
 }

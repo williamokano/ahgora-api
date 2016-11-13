@@ -114,14 +114,14 @@ class HttpApi extends AbstractApi
     }
 
     /**
-     * Get the punchs at the given parameters.
+     * Get the punches at the given parameters.
      *
-     * @param int|null $month The month you want to get the punchs - Must be between 01 and 12 (both included)
-     * @param int|null $year  The year you want to get the punchs
+     * @param int|null $month The month you want to get the punches - Must be between 01 and 12 (both included)
+     * @param int|null $year  The year you want to get the punches
      *
      * @return array
      */
-    public function getPunchs($month = null, $year = null)
+    public function getPunches($month = null, $year = null)
     {
         $month = $month !== null ? $month : (int) date('m');
         $year = $year !== null ? $year : (int) date('Y');
@@ -130,9 +130,9 @@ class HttpApi extends AbstractApi
             throw new InvalidArgumentException(sprintf('Invalid period of time: [%s-%s]', $month, $year));
         }
 
-        $punchsPageResponse = $this->getPunchsPage($month, $year);
+        $punchesPageResponse = $this->getPunchesPage($month, $year);
 
-        return $this->getPunchsFromPage($punchsPageResponse);
+        return $this->getPunchesFromPage($punchesPageResponse);
     }
 
     /**
@@ -158,14 +158,14 @@ class HttpApi extends AbstractApi
     /**
      * Retrive all the punches for the given string.
      *
-     * @param string $punchsStr
+     * @param string $punchesStr
      *
      * @return array
      */
-    private function parsePunchs($punchsStr)
+    private function parsePunches($punchesStr)
     {
         $punches = [];
-        if (!!preg_match_all('/(\d{2}:\d{2})/is', $punchsStr, $matches)) {
+        if (!!preg_match_all('/(\d{2}:\d{2})/is', $punchesStr, $matches)) {
             $punches = $matches[0];
         }
 
@@ -285,62 +285,62 @@ class HttpApi extends AbstractApi
     }
 
     /**
-     * Get the built punchsUrl with the given month and year.
+     * Get the built punchesUrl with the given month and year.
      *
      * @param int $month
      * @param int $year
      *
      * @return string
      */
-    private function punchsUrl($month, $year)
+    private function punchesUrl($month, $year)
     {
         $month = str_pad($month, 2, '0', STR_PAD_LEFT);
-        $punchsUrl = sprintf(self::AHGORA_PUNCHS_URL, self::AHGORA_BASE_URL, $month, $year);
-        $this->debug('punchsUrl', ['punchs_url' => $punchsUrl]);
+        $punchesUrl = sprintf(self::AHGORA_PUNCHS_URL, self::AHGORA_BASE_URL, $month, $year);
+        $this->debug('punchesUrl', ['punches_url' => $punchesUrl]);
 
-        return $punchsUrl;
+        return $punchesUrl;
     }
 
     /**
-     * Make the request to the punchs page of the requested time period.
+     * Make the request to the punches page of the requested time period.
      *
      * @param int $month
      * @param int $year
      *
      * @return IHttpResponse
      */
-    private function getPunchsPage($month, $year)
+    private function getPunchesPage($month, $year)
     {
-        return $this->httpClient->get($this->punchsUrl($month, $year));
+        return $this->httpClient->get($this->punchesUrl($month, $year));
     }
 
     /**
-     * Get the punches from the given response of the punchs page.
+     * Get the punches from the given response of the punches page.
      *
-     * @param IHttpResponse $punchsPageResponse
+     * @param IHttpResponse $punchesPageResponse
      *
      * @return array
      */
-    private function getPunchsFromPage(IHttpResponse $punchsPageResponse)
+    private function getPunchesFromPage(IHttpResponse $punchesPageResponse)
     {
-        if ($punchsPageResponse->getHttpStatus() !== IHttpClient::HTTP_STATUS_OK) {
-            throw new InvalidArgumentException('The request returned http status ' . $punchsPageResponse->getHttpStatus());
+        if ($punchesPageResponse->getHttpStatus() !== IHttpClient::HTTP_STATUS_OK) {
+            throw new InvalidArgumentException('The request returned http status ' . $punchesPageResponse->getHttpStatus());
         }
 
-        $punchs = $this->parsePunchsPage($punchsPageResponse);
+        $punches = $this->parsePunchesPage($punchesPageResponse);
 
         return [
-            'punchs' => $punchs,
+            'punches' => $punches,
         ];
     }
 
-    private function parsePunchsPage(IHttpResponse $punchsPageResponse)
+    private function parsePunchesPage(IHttpResponse $punchesPageResponse)
     {
-        $rows = $this->htmlPageParser->getPunchsRows($punchsPageResponse);
+        $rows = $this->htmlPageParser->getPunchesRows($punchesPageResponse);
         $punchCollection = [];
 
         foreach ($rows as $row) {
-            $punches = $this->parsePunchs($row['punchs']);
+            $punches = $this->parsePunches($row['punches']);
             $punchCollection = array_merge($punchCollection, $this->createPunchesDate($row['date'], $punches));
         }
 
