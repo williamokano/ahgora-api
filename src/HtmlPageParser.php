@@ -67,5 +67,4 @@ class HtmlPageParser
             'punchs'  => $matches[0][1],
         ];
     }
-
 }

@@ -337,14 +337,10 @@ class HttpApi extends AbstractApi
     private function parsePunchsPage(IHttpResponse $punchsPageResponse)
     {
         $rows = $this->htmlPageParser->getPunchsRows($punchsPageResponse);
-
         $punchCollection = [];
 
-        /** @var \DOMElement $row */
         foreach ($rows as $row) {
-
             $punches = $this->parsePunchs($row['punchs']);
-
             $punchCollection = array_merge($punchCollection, $this->createPunchesDate($row['date'], $punches));
         }
 
