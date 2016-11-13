@@ -3,7 +3,6 @@
 namespace Katapoka\Ahgora;
 
 use DateTime;
-use DOMDocument;
 use InvalidArgumentException;
 use Katapoka\Ahgora\Contracts\IHttpClient;
 use Katapoka\Ahgora\Contracts\IHttpResponse;
@@ -28,6 +27,8 @@ class HttpApi extends AbstractApi
     private $username;
     /** @var bool */
     private $loggedIn = false;
+    /** @var HtmlPageParser */
+    private $htmlPageParser;
 
     /**
      * Api constructor.
@@ -37,6 +38,7 @@ class HttpApi extends AbstractApi
     public function __construct(IHttpClient $httpClient)
     {
         $this->httpClient = $httpClient;
+        $this->htmlPageParser = new HtmlPageParser();
         $this->debug('Api instance created');
     }
 
@@ -151,6 +153,23 @@ class HttpApi extends AbstractApi
     public function getDepartment()
     {
         return "NOT IMPLEMENTED YET";
+    }
+
+    /**
+     * Retrive all the punches for the given string.
+     *
+     * @param string $punchsStr
+     *
+     * @return array
+     */
+    private function parsePunchs($punchsStr)
+    {
+        $punches = [];
+        if (!!preg_match_all('/(\d{2}:\d{2})/is', $punchsStr, $matches)) {
+            $punches = $matches[0];
+        }
+
+        return $punches;
     }
 
     /**
@@ -317,77 +336,19 @@ class HttpApi extends AbstractApi
 
     private function parsePunchsPage(IHttpResponse $punchsPageResponse)
     {
-        $punchsTableHtml = $this->getPunchsTableHtml($punchsPageResponse);
-
-        $dom = new DOMDocument();
-        if (!@$dom->loadHTML($punchsTableHtml)) {
-            throw new InvalidArgumentException('Failed to parse punchsTable');
-        }
-
-        $rows = $dom->getElementsByTagName('tr');
+        $rows = $this->htmlPageParser->getPunchsRows($punchsPageResponse);
 
         $punchCollection = [];
 
         /** @var \DOMElement $row */
         foreach ($rows as $row) {
-            $cols = $row->getElementsByTagName('td');
-            if ($cols->length !== 8) {
-                continue;
-            }
 
-            $date = trim($cols->item(0)->nodeValue);
-            $punches = $this->parsePunchs($cols->item(2)->nodeValue);
+            $punches = $this->parsePunchs($row['punchs']);
 
-            $punchCollection = array_merge($punchCollection, $this->createPunchesDate($date, $punches));
+            $punchCollection = array_merge($punchCollection, $this->createPunchesDate($row['date'], $punches));
         }
 
         return $punchCollection;
-    }
-
-    private function getPunchsTableHtml(IHttpResponse $punchsPageResponse)
-    {
-        $tables = $this->getPageTables($punchsPageResponse);
-
-        //A primeira posição é a table
-        return $tables['punchs'];
-    }
-
-    /**
-     * Get both tables and return the strings into an array with the properties 'summary' and 'punchs'.
-     *
-     * @param IHttpResponse $punchsPageResponse
-     *
-     * @return array
-     */
-    private function getPageTables(IHttpResponse $punchsPageResponse)
-    {
-        $regex = '/<table.*?>.*?<\/table>/si';
-
-        if (!preg_match_all($regex, $punchsPageResponse->getBody(), $matches)) {
-            throw new InvalidArgumentException('Pattern not found in the response');
-        }
-
-        return [
-            'summary' => $matches[0][0],
-            'punchs'  => $matches[0][1],
-        ];
-    }
-
-    /**
-     * Retrive all the punches for the given string.
-     *
-     * @param string $punchsStr
-     *
-     * @return array
-     */
-    private function parsePunchs($punchsStr)
-    {
-        $punches = [];
-        if (!!preg_match_all('/(\d{2}:\d{2})/is', $punchsStr, $matches)) {
-            $punches = $matches[0];
-        }
-
-        return $punches;
     }
 
     /**

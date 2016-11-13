@@ -10,6 +10,7 @@ abstract class AbstractApi implements IAhgoraApi
 {
     use Loggable;
 
+    /** @var string */
     protected $datetimeFormat = 'Y-m-d H:i:s';
 
     /**
