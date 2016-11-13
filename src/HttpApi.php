@@ -407,5 +407,4 @@ class HttpApi extends AbstractApi
 
         return $dates;
     }
-
 }
