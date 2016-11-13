@@ -2,6 +2,7 @@
 
 namespace Katapoka\Ahgora;
 
+use DOMDocument;
 use InvalidArgumentException;
 use Katapoka\Ahgora\Contracts\IHttpClient;
 use Katapoka\Ahgora\Contracts\IHttpResponse;
@@ -14,6 +15,7 @@ class HttpApi extends AbstractApi
     const AHGORA_BASE_URL = 'https://www.ahgora.com.br';
     const AHGORA_COMPANY_URL = '%s/externo/index/%s';
     const AHGORA_LOGIN_URL = '%s/externo/login';
+    const AHGORA_PUNCHS_URL = '%s/externo/batidas/%d-%d';
 
     /** @var \Katapoka\Ahgora\Contracts\IHttpClient */
     private $httpClient;
@@ -94,7 +96,6 @@ class HttpApi extends AbstractApi
         $hasLoggedIn = false;
         $this->debug('Started login proccess');
 
-
         $accessEnabled = $this->checkAccessEnabled();
 
         if ($accessEnabled) {
@@ -107,6 +108,48 @@ class HttpApi extends AbstractApi
         $this->setLoggedIn($hasLoggedIn);
 
         return $hasLoggedIn;
+    }
+
+    /**
+     * Get the punchs at the given parameters.
+     *
+     * @param int|null $month The month you want to get the punchs - Must be between 01 and 12 (both included)
+     * @param int|null $year  The year you want to get the punchs
+     *
+     * @return array
+     */
+    public function getPunchs($month = null, $year = null)
+    {
+        $month = $month !== null ? $month : (int)date('m');
+        $year = $year !== null ? $year : (int)date('Y');
+
+        if (!$this->isValidPeriod($month, $year)) {
+            throw new InvalidArgumentException('Invalid period of time');
+        }
+
+        $punchsPageResponse = $this->getPunchsPage($month, $year);
+
+        return $this->getPunchsFromPage($punchsPageResponse);
+    }
+
+    /**
+     * Gets the employer name.
+     *
+     * @return string
+     */
+    public function getEmployeeRole()
+    {
+        return "NOT IMPLEMENTED YET";
+    }
+
+    /**
+     * Get the employer department.
+     *
+     * @return string
+     */
+    public function getDepartment()
+    {
+        return "NOT IMPLEMENTED YET";
     }
 
     /**
@@ -222,35 +265,136 @@ class HttpApi extends AbstractApi
     }
 
     /**
-     * Get the punchs at the given parameters.
+     * Get the built punchsUrl with the given month and year.
      *
-     * @param int|null $month The month you want to get the punchs - Must be between 01 and 12 (both included)
-     * @param int|null $year  The year you want to get the punchs
+     * @param int $month
+     * @param int $year
+     *
+     * @return string
+     */
+    private function punchsUrl($month, $year)
+    {
+        $month = str_pad($month, 2, '0', STR_PAD_LEFT);
+        $punchsUrl = sprintf(self::AHGORA_PUNCHS_URL, self::AHGORA_BASE_URL, $month, $year);
+        $this->debug('punchsUrl', ['punchs_url' => $punchsUrl]);
+
+        return $punchsUrl;
+    }
+
+    /**
+     * Make the request to the punchs page of the requested time period.
+     *
+     * @param int $month
+     * @param int $year
+     *
+     * @return IHttpResponse
+     */
+    private function getPunchsPage($month, $year)
+    {
+        return $this->httpClient->get($this->punchsUrl($month, $year));
+    }
+
+    /**
+     * Get the punches from the given response of the punchs page.
+     *
+     * @param IHttpResponse $punchsPageResponse
      *
      * @return array
      */
-    public function getPunchs($month = null, $year = null)
+    private function getPunchsFromPage(IHttpResponse $punchsPageResponse)
     {
-        return [];
+        if ($punchsPageResponse->getHttpStatus() !== IHttpClient::HTTP_STATUS_OK) {
+            throw new InvalidArgumentException('The request returned http status ' . $punchsPageResponse->getHttpStatus());
+        }
+
+        $punchs = $this->parsePunchsPage($punchsPageResponse);
+
+        return [
+            'punchs' => $punchs,
+        ];
+    }
+
+    private function parsePunchsPage(IHttpResponse $punchsPageResponse)
+    {
+        $punchsTableHtml = $this->getPunchsTableHtml($punchsPageResponse);
+
+        $dom = new DOMDocument();
+        @$dom->loadHTML($punchsTableHtml);
+
+        $rows = $dom->getElementsByTagName('tr');
+
+        $punchCollection = [];
+
+        /** @var \DOMElement $row */
+        foreach ($rows as $row) {
+            $cols = $row->getElementsByTagName('td');
+            if ($cols->length !== 8) {
+                continue;
+            }
+
+            $date = trim($cols->item(0)->nodeValue);
+            $punches = $this->parsePunchs($cols->item(2)->nodeValue);
+
+            $punchCollection = array_merge($punchCollection, $this->createPunchesDate($date, $punches));
+        }
+
+        return $punchCollection;
+    }
+
+    private function getPunchsTableHtml(IHttpResponse $punchsPageResponse)
+    {
+        $tables = $this->getPageTables($punchsPageResponse);
+
+        //A primeira posição é a table
+        return $tables['punchs'];
     }
 
     /**
-     * Gets the employer name.
+     * Get both tables and return the strings into an array with the properties 'summary' and 'punchs'.
      *
-     * @return string
+     * @param IHttpResponse $punchsPageResponse
+     *
+     * @return array
      */
-    public function getEmployeeRole()
+    private function getPageTables(IHttpResponse $punchsPageResponse)
     {
-        return "NOT IMPLEMENTED YET";
+        $regex = '/<table.*?>.*?<\/table>/si';
+
+        if (!preg_match_all($regex, $punchsPageResponse->getBody(), $matches)) {
+            throw new InvalidArgumentException('Pattern not found in the response');
+        }
+
+        return [
+            'summary' => $matches[0][0],
+            'punchs'  => $matches[0][1],
+        ];
     }
 
     /**
-     * Get the employer department.
+     * Retrive all the punches for the given string.
      *
-     * @return string
+     * @param string $punchsStr
+     *
+     * @return array
      */
-    public function getDepartment()
+    private function parsePunchs($punchsStr)
     {
-        return "NOT IMPLEMENTED YET";
+        $punches = [];
+        if (!!preg_match_all('/(\d{2}:\d{2})/is', $punchsStr, $matches)) {
+            $punches = $matches[0];
+        }
+
+        return $punches;
     }
+
+    private function createPunchesDate($date, array $punches = [])
+    {
+        $dates = [];
+        foreach ($punches as $punch) {
+            $dates[] = \DateTime::createFromFormat($this->datetimeFormat, sprintf('%s %s', $date, $punch));
+        }
+
+        return $dates;
+    }
+
 }
