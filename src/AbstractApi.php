@@ -47,10 +47,22 @@ abstract class AbstractApi implements IAhgoraApi
      */
     protected function isValidPeriod($month, $year)
     {
+        return $this->isValidMonth($month) && $this->isValidYear($year) && !$this->isFutureDate($month, $year);
+    }
+
+    /**
+     * Check if the given time period is in the future.
+     *
+     * @param int $month
+     * @param int $year
+     *
+     * @return bool
+     */
+    private function isFutureDate($month, $year)
+    {
         $currentYear = (int) date('Y');
         $currentMonth = (int) date('m');
-
-        return $this->isValidMonth($month) && $this->isValidYear($year) && ($year < $currentYear || $year === $currentYear && $month <= $currentMonth);
+        return $year < $currentYear || ($year === $currentYear && $month <= $currentMonth);
     }
 
     /**
