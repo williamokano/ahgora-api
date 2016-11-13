@@ -46,8 +46,8 @@ abstract class AbstractApi implements IAhgoraApi
      */
     protected function isValidPeriod($month, $year)
     {
-        $currentYear = (int)date('Y');
-        $currentMonth = (int)date('m');
+        $currentYear = (int) date('Y');
+        $currentMonth = (int) date('m');
 
         return $this->isValidMonth($month) && $this->isValidYear($year) && ($year < $currentYear || $year === $currentYear && $month <= $currentMonth);
     }

@@ -120,8 +120,8 @@ class HttpApi extends AbstractApi
      */
     public function getPunchs($month = null, $year = null)
     {
-        $month = $month !== null ? $month : (int)date('m');
-        $year = $year !== null ? $year : (int)date('Y');
+        $month = $month !== null ? $month : (int) date('m');
+        $year = $year !== null ? $year : (int) date('Y');
 
         if (!$this->isValidPeriod($month, $year)) {
             throw new InvalidArgumentException('Invalid period of time');
