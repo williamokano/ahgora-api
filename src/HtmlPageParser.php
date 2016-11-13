@@ -2,6 +2,7 @@
 namespace Katapoka\Ahgora;
 
 use DOMDocument;
+use DOMElement;
 use InvalidArgumentException;
 use Katapoka\Ahgora\Contracts\IHttpResponse;
 
@@ -20,7 +21,14 @@ class HtmlPageParser
         return $tables['punchs'];
     }
 
-    public function getPunchsRows($punchsPageResponse)
+    /**
+     * Get the punch's rows in array format.
+     *
+     * @param IHttpResponse $punchsPageResponse
+     *
+     * @return array
+     */
+    public function getPunchsRows(IHttpResponse $punchsPageResponse)
     {
         $punchsTableHtml = $this->getPunchsTableHtml($punchsPageResponse);
 
@@ -31,20 +39,33 @@ class HtmlPageParser
 
         $rows = $dom->getElementsByTagName('tr');
         $rowsCollection = [];
-        /** @var \DOMElement $row */
-        foreach ($rows as $row) {
-            $cols = $row->getElementsByTagName('td');
-            if ($cols->length !== 8) {
-                continue;
-            }
 
-            $rowsCollection[] = [
-                'date'   => trim($cols->item(0)->nodeValue),
-                'punchs' => trim($cols->item(2)->nodeValue),
-            ];
+        foreach ($rows as $row) {
+            if ($punchRow = $this->parsePunchRow($row)) {
+                $rowsCollection[] = $punchRow;
+            }
         }
 
         return $rowsCollection;
+    }
+
+    /**
+     * Parse the punch row and return its values.
+     *
+     * @param \DOMElement $row
+     *
+     * @return array|bool
+     */
+    private function parsePunchRow(DOMElement $row) {
+        $cols = $row->getElementsByTagName('td');
+        if ($cols->length !== 8) {
+            return false;
+        }
+
+        return [
+            'date'   => trim($cols->item(0)->nodeValue),
+            'punchs' => trim($cols->item(2)->nodeValue),
+        ];
     }
 
     /**
