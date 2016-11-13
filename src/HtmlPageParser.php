@@ -56,7 +56,8 @@ class HtmlPageParser
      *
      * @return array|bool
      */
-    private function parsePunchRow(DOMElement $row) {
+    private function parsePunchRow(DOMElement $row)
+    {
         $cols = $row->getElementsByTagName('td');
         if ($cols->length !== 8) {
             return false;
