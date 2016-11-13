@@ -127,7 +127,7 @@ class HttpApi extends AbstractApi
         $year = $year !== null ? $year : (int) date('Y');
 
         if (!$this->isValidPeriod($month, $year)) {
-            throw new InvalidArgumentException('Invalid period of time');
+            throw new InvalidArgumentException(sprintf('Invalid period of time: [%s-%s]', $month, $year));
         }
 
         $punchsPageResponse = $this->getPunchsPage($month, $year);

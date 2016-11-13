@@ -63,7 +63,7 @@ abstract class AbstractApi implements IAhgoraApi
         $currentYear = (int) date('Y');
         $currentMonth = (int) date('m');
 
-        return $year < $currentYear || ($year === $currentYear && $month <= $currentMonth);
+        return $year > $currentYear || ($year === $currentYear && $month > $currentMonth);
     }
 
     /**
