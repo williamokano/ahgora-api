@@ -2,6 +2,7 @@
 
 namespace Katapoka\Ahgora;
 
+use DateTime;
 use DOMDocument;
 use InvalidArgumentException;
 use Katapoka\Ahgora\Contracts\IHttpClient;
@@ -319,7 +320,9 @@ class HttpApi extends AbstractApi
         $punchsTableHtml = $this->getPunchsTableHtml($punchsPageResponse);
 
         $dom = new DOMDocument();
-        @$dom->loadHTML($punchsTableHtml);
+        if (!@$dom->loadHTML($punchsTableHtml)) {
+            throw new InvalidArgumentException('Failed to parse punchsTable');
+        }
 
         $rows = $dom->getElementsByTagName('tr');
 
@@ -387,11 +390,19 @@ class HttpApi extends AbstractApi
         return $punches;
     }
 
+    /**
+     * Convert the date string and the datepunch array to an array of DateTime's.
+     *
+     * @param string $date
+     * @param array $punches
+     *
+     * @return \DateTime[]
+     */
     private function createPunchesDate($date, array $punches = [])
     {
         $dates = [];
         foreach ($punches as $punch) {
-            $dates[] = \DateTime::createFromFormat($this->datetimeFormat, sprintf('%s %s', $date, $punch));
+            $dates[] = DateTime::createFromFormat($this->datetimeFormat, sprintf('%s %s', $date, $punch));
         }
 
         return $dates;
