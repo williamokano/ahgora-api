@@ -121,8 +121,8 @@ class HttpApi extends AbstractApi
      */
     public function getPunchs($month = null, $year = null)
     {
-        $month = $month !== null ? $month : (int) date('m');
-        $year = $year !== null ? $year : (int) date('Y');
+        $month = $month !== null ? $month : (int)date('m');
+        $year = $year !== null ? $year : (int)date('Y');
 
         if (!$this->isValidPeriod($month, $year)) {
             throw new InvalidArgumentException('Invalid period of time');
@@ -394,7 +394,7 @@ class HttpApi extends AbstractApi
      * Convert the date string and the datepunch array to an array of DateTime's.
      *
      * @param string $date
-     * @param array $punches
+     * @param array  $punches
      *
      * @return \DateTime[]
      */
