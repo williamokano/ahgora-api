@@ -128,16 +128,14 @@ class HttpApi extends AbstractApi
             throw new LogicException('To get punches you need to be loggedIn');
         }
 
-        $month = $month !== null ? $month : (int) date('m');
-        $year = $year !== null ? $year : (int) date('Y');
+        $month = IntHelper::parseNullableInt($month);
+        $year = IntHelper::parseNullableInt($year);
 
         if (!$this->isValidPeriod($month, $year)) {
             throw new InvalidArgumentException(sprintf('Invalid period of time: [%s-%s]', $month, $year));
         }
 
-        $punchesPageResponse = $this->getPunchesPage($month, $year);
-
-        return $this->getPunchesFromPage($punchesPageResponse);
+        return $this->getPunchesFromPage($this->getPunchesPage($month, $year));
     }
 
     /**
