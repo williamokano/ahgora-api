@@ -131,9 +131,11 @@ class HttpApi extends AbstractApi
         $month = IntHelper::parseNullableInt($month);
         $year = IntHelper::parseNullableInt($year);
 
+        /*
         if (!$this->isValidPeriod($month, $year)) {
             throw new InvalidArgumentException(sprintf('Invalid period of time: [%s-%s]', $month, $year));
         }
+        */
 
         return $this->getPunchesFromPage($this->getPunchesPage($month, $year));
     }
