@@ -16,7 +16,7 @@ class HttpApi extends AbstractApi
     const AHGORA_BASE_URL = 'https://www.ahgora.com.br';
     const AHGORA_COMPANY_URL = '%s/externo/index/%s';
     const AHGORA_LOGIN_URL = '%s/externo/login';
-    const AHGORA_PUNCHS_URL = '%s/externo/batidas/%d-%d';
+    const AHGORA_PUNCHS_URL = '%s/externo/batidas/%s-%s';
 
     /** @var \Katapoka\Ahgora\Contracts\IHttpClient */
     private $httpClient;
@@ -131,6 +131,8 @@ class HttpApi extends AbstractApi
         $month = IntHelper::parseNullableInt($month);
         $year = IntHelper::parseNullableInt($year);
 
+        $month = $month ?: (int)date('m') + (intval(date('d')) >= 20 ? 1 : 0);
+        $year = $year ?: (int)date('Y');
         /*
         if (!$this->isValidPeriod($month, $year)) {
             throw new InvalidArgumentException(sprintf('Invalid period of time: [%s-%s]', $month, $year));
@@ -299,9 +301,13 @@ class HttpApi extends AbstractApi
      */
     private function punchesUrl($month, $year)
     {
-        $month = str_pad($month, 2, '0', STR_PAD_LEFT);
+        $month = str_pad(strval($month), 2, '0', STR_PAD_LEFT);
         $punchesUrl = sprintf(self::AHGORA_PUNCHS_URL, self::AHGORA_BASE_URL, $month, $year);
-        $this->debug('punchesUrl', ['punches_url' => $punchesUrl]);
+        $this->debug('punchesUrl', [
+            'punches_url' => $punchesUrl,
+            'month'       => $month,
+            'year'        => $year
+        ]);
 
         return $punchesUrl;
     }
