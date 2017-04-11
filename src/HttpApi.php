@@ -133,13 +133,37 @@ class HttpApi extends AbstractApi
 
         $month = $month ?: (int)date('m') + (intval(date('d')) >= 20 ? 1 : 0);
         $year = $year ?: (int)date('Y');
-        /*
-        if (!$this->isValidPeriod($month, $year)) {
-            throw new InvalidArgumentException(sprintf('Invalid period of time: [%s-%s]', $month, $year));
-        }
-        */
 
         return $this->getPunchesFromPage($this->getPunchesPage($month, $year));
+    }
+
+    /**
+     * Get the punches from some given day.
+     *
+     * @param int $day
+     * @param int $month
+     * @param int $year
+     *
+     * @return mixed
+     */
+    public function getPunchesFromDay($day, $month, $year)
+    {
+        $date = date("Y-m-d", mktime(0, 0, 0, $month, $day, $year));
+        list($year, $month, $day) = explode('-', $date);
+
+        if ($day > 19) {
+            $month++;
+        }
+
+        if ($month > 12) {
+            $month = 1;
+            $year++;
+        }
+        $punches = $this->getPunches($month, $year);
+
+        return array_filter($punches['punches'], function (\DateTime $punchDateTime) use ($day) {
+            return (int) $punchDateTime->format('d') === (int) $day;
+        });
     }
 
     /**
