@@ -141,7 +141,10 @@ class RestApi extends AbstractApi
                 throw new \BadMethodCallException($response->error);
             }
 
-            return ['punches' => $this->parsePunches($response->dias)];
+            return [
+                'punches' => $this->parsePunches($response->dias),
+                'extra'   => $this->parseExtra($response->dias),
+            ];
         } catch (Exception $e) {
             $this->error($e->getMessage(), $params);
 
@@ -267,4 +270,25 @@ class RestApi extends AbstractApi
 
         return $tmp;
     }
+
+    private function parseExtra($dias)
+    {
+        $tmp = [];
+
+        foreach ($dias as $dia => $dadosDia) {
+            // Parse falta
+            $falta = array_filter($dadosDia->resultado, function ($item) { return $item->tipo == 'FALTA'; });
+
+            // Parse extra
+            $extra = array_filter($dadosDia->resultado, function ($item) { return $item->tipo == 'Extra'; });
+
+            $tmp[$dia][] = [
+                'falta' => empty($falta) ? '00:00' : preg_replace('/^(-)?(\d{2})(\d{2})$/i', '\1\2:\3', array_shift($falta)->valor),
+                'extra' => empty($extra) ? '00:00' : preg_replace('/^(-)?(\d{2})(\d{2})$/i', '\1\2:\3', array_shift($extra)->valor),
+            ];
+        }
+
+        return $tmp;
+    }
+
 }
