@@ -89,7 +89,9 @@ class GuzzleAdapter implements IHttpClient
      */
     public function post($url, $data = [], array $config = [])
     {
-        return $this->request(IHttpClient::HTTP_POST, $url, $data, $config);
+        return once(function () use ($url, $data, $config) {
+            return $this->request(IHttpClient::HTTP_POST, $url, $data, $config);
+        });
     }
 
     /**

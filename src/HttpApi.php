@@ -167,6 +167,16 @@ class HttpApi extends AbstractApi
     }
 
     /**
+     * Gets the employee name.
+     *
+     * @return string
+     */
+    public function getEmployeeName()
+    {
+        return "NOT IMPLEMENTED YET";
+    }
+
+    /**
      * Gets the employer name.
      *
      * @return string

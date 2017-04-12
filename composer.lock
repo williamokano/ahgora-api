@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "560b0ca7f7c088c70668c62aa9b9a0bd",
-    "content-hash": "ca3a391e3a955c8d83c9110445f5d59d",
+    "hash": "00729fb0ab272e85d8a3993e4641bcae",
+    "content-hash": "e446ec87d8968752587a3b20ead11711",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -283,17 +283,70 @@
             "time": "2016-10-10 12:19:37"
         },
         {
-            "name": "williamokano/ahgora-api-contracts",
-            "version": "1.0.3",
+            "name": "spatie/once",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/williamokano/ahgora-api-contracts.git",
-                "reference": "df46ca8dcaf98c35db5ed643237a14ca92d05c94"
+                "url": "https://github.com/spatie/once.git",
+                "reference": "a8386f826922a7ff114f46d7cf3c500781a55933"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/williamokano/ahgora-api-contracts/zipball/df46ca8dcaf98c35db5ed643237a14ca92d05c94",
-                "reference": "df46ca8dcaf98c35db5ed643237a14ca92d05c94",
+                "url": "https://api.github.com/repos/spatie/once/zipball/a8386f826922a7ff114f46d7cf3c500781a55933",
+                "reference": "a8386f826922a7ff114f46d7cf3c500781a55933",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.0"
+            },
+            "require-dev": {
+                "illuminate/support": "~5.3.0",
+                "phpunit/phpunit": "5.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\Once\\": "src"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A magic memoization function",
+            "homepage": "https://github.com/spatie/once",
+            "keywords": [
+                "cache",
+                "callable",
+                "memozation",
+                "once",
+                "spatie"
+            ],
+            "time": "2016-11-14 09:46:00"
+        },
+        {
+            "name": "williamokano/ahgora-api-contracts",
+            "version": "1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/williamokano/ahgora-api-contracts.git",
+                "reference": "eb503f9edeb63d6c27f6cb959647a4ae8ef62946"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/williamokano/ahgora-api-contracts/zipball/eb503f9edeb63d6c27f6cb959647a4ae8ef62946",
+                "reference": "eb503f9edeb63d6c27f6cb959647a4ae8ef62946",
                 "shasum": ""
             },
             "require": {
@@ -316,7 +369,7 @@
                 }
             ],
             "description": "Ahgora API contracts",
-            "time": "2017-04-11 01:25:36"
+            "time": "2017-04-12 02:56:20"
         }
     ],
     "packages-dev": [
